@@ -1005,41 +1005,43 @@ IF (ASSIMP_BUILD_USD_IMPORTER)
     endif ()
     # Use CMAKE_CURRENT_SOURCE_DIR which provides assimp-local path (CMAKE_SOURCE_DIR is
     # relative to top-level/main project)
-    set(Tinyusdz_BASE_ABSPATH "${CMAKE_CURRENT_SOURCE_DIR}/../contrib/tinyusdz")
-    set(Tinyusdz_REPO_ABSPATH "${Tinyusdz_BASE_ABSPATH}/autoclone")
+    # set(Tinyusdz_BASE_ABSPATH "${CMAKE_CURRENT_SOURCE_DIR}/../contrib/tinyusdz")
+    # set(Tinyusdz_REPO_ABSPATH "${Tinyusdz_BASE_ABSPATH}/autoclone")
 
-    # Note: ALWAYS specify a git commit hash (or tag) instead of a branch name; using a branch
-    #       name can lead to non-deterministic (unpredictable) results since the code is potentially
-    #       in flux
-    # "dev" branch, 14 Mar 2025
-    set(TINYUSDZ_GIT_TAG "6050eef932f7d2788656d63297aa488fb0961ed1")
-    message("****")
-    message("\n\n**** Cloning tinyusdz repo, git tag ${TINYUSDZ_GIT_TAG}\n\n")
+    # # Note: ALWAYS specify a git commit hash (or tag) instead of a branch name; using a branch
+    # #       name can lead to non-deterministic (unpredictable) results since the code is potentially
+    # #       in flux
+    # # "dev" branch, 14 Mar 2025
+    # set(TINYUSDZ_GIT_TAG "6050eef932f7d2788656d63297aa488fb0961ed1")
+    # message("****")
+    # message("\n\n**** Cloning tinyusdz repo, git tag ${TINYUSDZ_GIT_TAG}\n\n")
 
-    # Patch required to build arm32 on android
-    set(TINYUSDZ_PATCH_CMD git apply ${Tinyusdz_BASE_ABSPATH}/patches/tinyusdz.patch)
+    # # Patch required to build arm32 on android
+    # set(TINYUSDZ_PATCH_CMD git apply ${Tinyusdz_BASE_ABSPATH}/patches/tinyusdz.patch)
 
-    # Note: CMake's "FetchContent" (which executes at configure time) is much better for this use case
-    #       than "ExternalProject" (which executes at build time); we just want to clone a repo and
-    #       block (wait) as long as necessary until cloning is complete, so we immediately have full
-    #       access to the cloned source files
-    include(FetchContent)
-    # Only want to clone once (on Android, using SOURCE_DIR will clone per-ABI (x86, x86_64 etc))
-    set(FETCHCONTENT_BASE_DIR ${Tinyusdz_REPO_ABSPATH})
-    set(FETCHCONTENT_QUIET on) # Turn off to troubleshoot repo clone problems
-    set(FETCHCONTENT_UPDATES_DISCONNECTED on) # Prevent other ABIs from re-cloning/re-patching etc
-    FetchContent_Declare(
-            tinyusdz_repo
-            EXCLUDE_FROM_ALL TRUE
-            GIT_REPOSITORY "https://github.com/lighttransport/tinyusdz"
-            GIT_TAG        ${TINYUSDZ_GIT_TAG}
-            PATCH_COMMAND  ${TINYUSDZ_PATCH_CMD}
-    )
-    FetchContent_MakeAvailable(tinyusdz_repo)
-    message("**** Finished cloning tinyusdz repo")
-    message("****")
+    # # Note: CMake's "FetchContent" (which executes at configure time) is much better for this use case
+    # #       than "ExternalProject" (which executes at build time); we just want to clone a repo and
+    # #       block (wait) as long as necessary until cloning is complete, so we immediately have full
+    # #       access to the cloned source files
+    # include(FetchContent)
+    # # Only want to clone once (on Android, using SOURCE_DIR will clone per-ABI (x86, x86_64 etc))
+    # set(FETCHCONTENT_BASE_DIR ${Tinyusdz_REPO_ABSPATH})
+    # set(FETCHCONTENT_QUIET on) # Turn off to troubleshoot repo clone problems
+    # set(FETCHCONTENT_UPDATES_DISCONNECTED on) # Prevent other ABIs from re-cloning/re-patching etc
+    # FetchContent_Declare(
+    #         tinyusdz_repo
+    #         EXCLUDE_FROM_ALL 1
+    #         GIT_REPOSITORY "https://github.com/lighttransport/tinyusdz.git"
+    #         GIT_TAG        ${TINYUSDZ_GIT_TAG}
+    #         GIT_PROGRESS   0
+    #         PATCH_COMMAND  ${TINYUSDZ_PATCH_CMD}
+    # )
+    # FetchContent_MakeAvailable(tinyusdz_repo)
+    # message("**** Finished cloning tinyusdz repo")
+    # message("****")
+    # set(Tinyusdz_SRC_ABSPATH "${Tinyusdz_REPO_ABSPATH}/tinyusdz_repo-src/src")
 
-    set(Tinyusdz_SRC_ABSPATH "${Tinyusdz_REPO_ABSPATH}/tinyusdz_repo-src/src")
+    set(Tinyusdz_SRC_ABSPATH "${CMAKE_CURRENT_SOURCE_DIR}/../contrib/tinyusdz/source/src")
     set(Tinyusdz_SRCS
             ${Tinyusdz_SRC_ABSPATH}/ascii-parser.cc
             ${Tinyusdz_SRC_ABSPATH}/ascii-parser-basetype.cc
