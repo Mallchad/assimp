@@ -1474,7 +1474,8 @@ IF (ASSIMP_WARNINGS_AS_ERRORS)
       TARGET_COMPILE_OPTIONS(assimp PRIVATE /W4 /WX)
     ENDIF()
   ELSE()
-    TARGET_COMPILE_OPTIONS(assimp PRIVATE -Wall -Werror)
+    # '-Wunused-const-variable' has useless errors upstream with -Werror
+    TARGET_COMPILE_OPTIONS(assimp PRIVATE -Wall -Werror -Wno-unused-const-variable)
   ENDIF()
 ENDIF()
 
